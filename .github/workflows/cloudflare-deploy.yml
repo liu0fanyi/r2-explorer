@@ -44,6 +44,9 @@ jobs:
       - name: Build with Trunk
         run: ./trunk build --release --public-url "/"
 
+      - name: Copy Functions to Dist
+        run: cp -r functions dist/
+
       # Deploy to Cloudflare Pages
       - name: Deploy to Cloudflare Pages
         uses: cloudflare/pages-action@v1
@@ -51,6 +54,6 @@ jobs:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           projectName: r2-explorer
-          directory: .
+          directory: dist
           # Optional: Enable this if you want to have a custom domain
           # branch: main
