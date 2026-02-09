@@ -4,6 +4,21 @@ export async function onRequestGet(ctx) {
     const delimiter = '/';
 
     try {
+        if (!ctx.env.BUCKET) {
+            const availableBindings = Object.keys(ctx.env);
+            return new Response(JSON.stringify({
+                error: "R2 bucket binding 'BUCKET' not found.",
+                available_bindings: availableBindings,
+                help: "Please ensure you have added an R2 bucket binding named 'BUCKET' in the Cloudflare Pages dashboard (Settings -> Functions -> R2 bucket bindings)."
+            }), {
+                status: 500,
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Access-Control-Allow-Origin': '*'
+                },
+            });
+        }
+
         const list = await ctx.env.BUCKET.list({
             prefix,
             delimiter,
@@ -33,12 +48,18 @@ export async function onRequestGet(ctx) {
         }
 
         return new Response(JSON.stringify(items), {
-            headers: { 'Content-Type': 'application/json' },
+            headers: {
+                'Content-Type': 'application/json',
+                'Access-Control-Allow-Origin': '*'
+            },
         });
     } catch (err) {
         return new Response(JSON.stringify({ error: err.message }), {
             status: 500,
-            headers: { 'Content-Type': 'application/json' },
+            headers: {
+                'Content-Type': 'application/json',
+                'Access-Control-Allow-Origin': '*'
+            },
         });
     }
 }
