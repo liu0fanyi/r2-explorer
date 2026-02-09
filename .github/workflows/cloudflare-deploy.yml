@@ -44,6 +44,9 @@ jobs:
       - name: Build with Trunk
         run: ./trunk build --release --public-url "/"
 
+      - name: Copy Functions to Dist
+        run: cp -r functions dist/
+
       # Deploy to Cloudflare Pages
       - name: Deploy to Cloudflare Pages
         uses: cloudflare/pages-action@v1
